@@ -1,12 +1,13 @@
 package view;
 
+import controller.PeopleController;
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import java.sql.*;
 
 public class PForm extends JFrame implements ActionListener {
-    private  JLabel lbPName = new JLabel("Name");
+    private JLabel lbPName = new JLabel("Name");
     private JTextField tfPName;
 
     private JLabel lbPIdentity = new JLabel("Identity");
@@ -43,8 +44,9 @@ public class PForm extends JFrame implements ActionListener {
     private JPanel pnMain = new JPanel();
 
     private People pp;
-    private Statement sm;
     private Object pid;
+
+    private PeopleController pc = new PeopleController();
 
     public PForm(String title, People pp, Object pid, Object pname, Object piden, Object hiden, Object prela, Object pgen, Object pbirth, Object phometown, Object pjob, Object pedu, Object preli) {
         super(title);
@@ -62,7 +64,7 @@ public class PForm extends JFrame implements ActionListener {
         tfPJob = new JTextField(String.valueOf(pjob));
         tfPEdu = new JTextField(String.valueOf(pedu));
         tfPReligion = new JTextField(String.valueOf(preli));
-        
+
         pnMain.setLayout(new GridLayout(11, 2, 5, 5));
         pnMain.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 
@@ -123,39 +125,20 @@ public class PForm extends JFrame implements ActionListener {
     }
 
     public void updateDB() {
-
         try {
-            String sql;
-            if (this.getTitle().equals("Add Form")) {
-                sql = "INSERT INTO People VALUES (N\'"
-                        + tfPName.getText() + "\', "
-                        + tfPIdentity.getText() + ", "
-                        + tfHouseholderIdentity.getText() + ", N\'"
-                        + tfPRelationshipwithHouseholder.getText() + "\', N\'"
-                        + tfPGender.getText() + "\', N\'"
-                        + tfPBirthday.getText() + "\', N\'"
-                        + tfPHometown.getText() + "\', N\'"
-                        + tfPJob.getText() + "\', N\'"
-                        + tfPEdu.getText() + "\', N\'"
-                        + tfPReligion.getText()
-                        + "\')";
-
-            } else {
-                sql = "UPDATE People SET"
-                        + " PName = N\'" + tfPName.getText()
-                        + "\', PIdentity = " + tfPIdentity.getText()
-                        + ", HouseholderIdentity = " + tfHouseholderIdentity.getText()
-                        + ", PRelationshipwithHouseholder = N\'" + tfPRelationshipwithHouseholder.getText()
-                        + "\', PGender = N\'" + tfPGender.getText()
-                        + "\', PBirthday = N\'" + tfPBirthday.getText()
-                        + "\', PHometown = N\'" + tfPHometown.getText()
-                        + "\', PJob = N\'" + tfPJob.getText()
-                        + "\', PEdu = N\'" + tfPEdu.getText()
-                        + "\', PReligion = N\'" + tfPReligion.getText()
-                        + "\' WHERE PID = " + String.valueOf(pid);
-            }
-            System.out.println(sql);
-            pp.sm.executeUpdate(sql);
+            pc.editPeople(this.getTitle().equals("Add Form") ? "Add Form" : "Edit Form",
+                    String.valueOf(pid),
+                    tfPName.getText(),
+                    tfPIdentity.getText(),
+                    tfHouseholderIdentity.getText(),
+                    tfPGender.getText(),
+                    tfPRelationshipwithHouseholder.getText(),
+                    tfPBirthday.getText(),
+                    tfPHometown.getText(),
+                    tfPJob.getText(),
+                    tfPEdu.getText(),
+                    tfPReligion.getText()
+            );
 
             pp.load();
             pp.model.fireTableDataChanged();

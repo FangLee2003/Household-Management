@@ -5,9 +5,9 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
-import java.sql.*;
 
 import controller.*;
+import model.*;
 
 public class People implements ActionListener, MouseListener {
     //private Icon iconSearch = new ImageIcon("./assets/search.png");
@@ -16,7 +16,7 @@ public class People implements ActionListener, MouseListener {
     private JTextField tfSearchP = new JTextField(20);
 
     private JButton btAddP = new JButton("Add people");
-    private  JButton btEditP = new JButton("Edit people");
+    private JButton btEditP = new JButton("Edit people");
     private JButton btDeleteP = new JButton("Delete people");
 
     DefaultTableModel model = new DefaultTableModel(new String[]{"PID", "PName", "PIdentity", "Householder Identity", "PRelationship with Householder", "PGender", "PBirthday", "PHometown", "PJob", "PEdu", "PReligion"}, 0) {
@@ -30,15 +30,12 @@ public class People implements ActionListener, MouseListener {
     private JPanel pnControl = new JPanel();
     private JPanel pnP = new JPanel();
 
-    Connection con;
-    Statement sm;
+    private PeopleController pc = new PeopleController();
 
     int selectedRow = 0;
 
     public People() {
         try {
-            con = ConnectionSQL.getConnection();
-            sm = con.createStatement();
 
             load();
 
@@ -86,28 +83,29 @@ public class People implements ActionListener, MouseListener {
             pnP.setLayout(new BorderLayout());
             pnP.add(pnControl, BorderLayout.NORTH);
             pnP.add(new JScrollPane(table), BorderLayout.CENTER);
+
         } catch (Exception e) {
             System.out.println(e);
         }
     }
 
     public void load() {
-        try {
-            model.setRowCount(0); //Clear table
+        model.setRowCount(0); //Clear table
 
-            ResultSet rs = sm.executeQuery("SELECT * FROM People");
-            ResultSetMetaData rsmd = rs.getMetaData();
-            int num_column = rsmd.getColumnCount();
-            while (rs.next()) {
-                Object[] row = new Object[num_column];
-                for (int i = 0; i < num_column; i++) {
-                    row[i] = rs.getObject(i + 1);
-                }
-                model.addRow(row);
-            }
-            rs.close();
-        } catch (Exception e) {
-            System.out.println(e);
+        for (people person : pc.getPeople()) {
+            model.addRow(new Object[]{
+                    person.getPid(),
+                    person.getPname(),
+                    person.getPiden(),
+                    person.getHiden(),
+                    person.getPrela(),
+                    person.getPgen(),
+                    person.getPbirth(),
+                    person.getPhometown(),
+                    person.getPjob(),
+                    person.getPedu(),
+                    person.getPreli()
+            });
         }
     }
 
@@ -131,14 +129,9 @@ public class People implements ActionListener, MouseListener {
     }
 
     public void delete() {
-        try {
-            Object id = table.getValueAt(selectedRow, 0);
-            model.removeRow(selectedRow);
-            String sql = "DELETE FROM People WHERE PID = " + id;
-            sm.executeUpdate(sql);
-        } catch (Exception e) {
-            System.out.println(e);
-        }
+        Object id = table.getValueAt(selectedRow, 0);
+        pc.deletePeople(id);
+        model.removeRow(selectedRow);
     }
 
     public JPanel getPeoplePanel() {

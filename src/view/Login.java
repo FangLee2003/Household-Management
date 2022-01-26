@@ -1,12 +1,11 @@
 package view;
 
-import controller.ConnectionSQL;
+import controller.*;
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.sql.*;
-import java.util.*;
 
 public class Login extends JFrame implements ActionListener {
     private JLabel lbUser = new JLabel("Username");
@@ -24,14 +23,8 @@ public class Login extends JFrame implements ActionListener {
     private Connection con;
     private PreparedStatement sm;
 
-    ArrayList<ArrayList<String>> managers = new ArrayList<ArrayList<String>>();
-
     public Login() {
         setTitle("Login");
-
-        load();
-
-        btLogin.addActionListener(this);
 
         pnMain.setLayout(new GridLayout(3, 2, 5, 5));
         pnMain.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
@@ -56,58 +49,20 @@ public class Login extends JFrame implements ActionListener {
         this.setVisible(true);
     }
 
-    public void load() {
-        try {
-            String user = tfUser.getText();
-            String pass = tfPass.getText();
-
-            String sql = "SELECT * FROM Manager";
-            System.out.println(sql);
-
-            con = ConnectionSQL.getConnection();
-            sm = con.prepareStatement(sql);
-
-            ResultSet rs = sm.executeQuery();
-            ResultSetMetaData rsmt = rs.getMetaData();
-
-            int column_num = rsmt.getColumnCount();
-
-            while (rs.next()) {
-                ArrayList<String> manager = new ArrayList<String>();
-                for (int i = 5; i <= column_num; i++) {
-                    manager.add(rs.getString(i));
-                }
-                managers.add(manager);
-            }
-            rs.close();
-            for (int i = 0; i < managers.size(); i++) {
-                for (int j = 0; j < 2; j++) {
-                    System.out.print(managers.get(i).get(j) + " ");
-                }
-                System.out.println();
-            }
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-    }
-
     public void actionPerformed(ActionEvent ae) {
         String user = tfUser.getText();
         String pass = tfPass.getText();
+
         if (ae.getActionCommand().equals("Login")) {
             try {
-                for (int i = 0; i < managers.size(); i++) {
-                    if (managers.get(i).get(0).equals(user) && managers.get(i).get(1).equals(pass)) {
-                        lbError.setForeground(Color.GREEN);
-                        lbError.setText("Login successfully!");
-                        dispose();
-                        //JOptionPane.showMessageDialog(btOk, "Ban da dang nhap thanh cong");
-                        new Home();
-                    }
+                LoginController lc = new LoginController();
+                if (lc.checkLogin(user, pass)) {
+                    dispose();
+                    //JOptionPane.showMessageDialog(btOk, "Ban da dang nhap thanh cong");
+                    new Home();
                 }
                 lbError.setForeground(Color.RED);
-                lbError.setText("Login failed!");
-                
+                lbError.setText("Wrong account or password!");
             } catch (Exception e) {
                 lbError.setText(String.valueOf(e));
                 lbError.setForeground(Color.RED);

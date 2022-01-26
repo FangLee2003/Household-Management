@@ -7,7 +7,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="mssql-jdbc-9.4.1.jre16" level="application" />
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
@@ -21,5 +20,6 @@
     <orderEntry type="library" exported="" name="flatlaf-2.0" level="project" />
     <orderEntry type="library" name="java" level="project" />
     <orderEntry type="library" name="jfreechart-1.5.3" level="project" />
+    <orderEntry type="library" name="mssql-jdbc-9.4.1.jre16" level="project" />
   </component>
 </module>

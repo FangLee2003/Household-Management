@@ -8,6 +8,7 @@ public class ConnectionSQL {
         return DriverManager.getConnection(dbURL);
     }
 }
+// e dua jdbc vao chua dạ e đưa vào rồi mà em mới cập nhật win, để e đưa lại
 /*
 if(conn!=null){
         System.out.println("Connected");
