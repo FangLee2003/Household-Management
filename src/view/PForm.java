@@ -1,10 +1,10 @@
 package view;
 
-import controller.PeopleController;
-
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+
+import controller.*;
 
 public class PForm extends JFrame implements ActionListener {
     private JLabel lbPName = new JLabel("Name");

@@ -1,15 +1,11 @@
 package view;
 
-import java.util.*;
-import javax.swing.*;
-
-import controller.ConnectionSQL;
 import org.jfree.chart.*;
 import org.jfree.data.general.*;
 import org.jfree.chart.plot.*;
+
 import controller.*;
 
-import java.sql.*;
 
 public class Chart {
     private DefaultPieDataset dataset = new DefaultPieDataset();
@@ -17,16 +13,10 @@ public class Chart {
     private ChartPanel pnChart;
     private PiePlot3D plot;
 
-    Connection con;
-    Statement smP;
-    Statement smH;
+    private ChartController cc = new ChartController();
 
     public Chart() {
-        try {
-            con = ConnectionSQL.getConnection();
-            smP = con.createStatement();
-            smH = con.createStatement();
-
+        try{
             loadDataset();
 
             pieChart = ChartFactory.createPieChart3D("Household structure", dataset, true, true, true);
@@ -44,24 +34,8 @@ public class Chart {
 
     public void loadDataset() {
         try {
-            ResultSet rsP = smP.executeQuery("SELECT COUNT(*) FROM People");
-            int people_num = 1;
-            if (rsP.next()) {
-                people_num = rsP.getInt(1);
-            }
-            int household_num = 1;
-            ResultSet rsH = smH.executeQuery("SELECT COUNT(*) FROM Household");
-            if (rsP.next()) {
-                household_num = rsP.getInt(1);
-            }
-
-            double household_percent = household_num * 100 / people_num;
-            double dependent_percent = 100 - household_percent;
-
-            System.out.println(people_num + "\n" + household_num + "\n" + household_percent + "\n" + dependent_percent);
-
-            dataset.setValue("Householders", household_percent);
-            dataset.setValue("Dependents", dependent_percent);
+            dataset.setValue("Householders", cc.getHouseholdPercent());
+            dataset.setValue("Dependents", cc.getDependentPercent());
 
         } catch (Exception e) {
             System.out.println(e);

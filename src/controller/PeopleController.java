@@ -3,14 +3,14 @@ package controller;
 import model.people;
 
 import java.sql.*;
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class PeopleController {
     private Connection con;
     private Statement sm;
     private ResultSet rs;
+
+    private String sql;
 
     public PeopleController() {
         try {
@@ -26,8 +26,8 @@ public class PeopleController {
         List<people> list = new ArrayList<people>();
 
         try {
-            String sql = "SELECT * FROM People";
-            ResultSet rs = sm.executeQuery(sql);
+            sql = "SELECT * FROM People";
+            rs = sm.executeQuery(sql);
             System.out.println(sql);
 
             while (rs.next()) {
@@ -55,7 +55,7 @@ public class PeopleController {
     public void editPeople(String title, String pid, String pname, String piden, String phiden, String prela, String pgen, String pbirth, String phometown, String pjob, String pedu, String preli) {
 
         try {
-            String sql;
+
             if (title.equals("Add Form")) {
                 sql = "INSERT INTO People VALUES (N\'"
                         + pname + "\', "
