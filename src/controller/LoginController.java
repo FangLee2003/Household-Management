@@ -1,5 +1,6 @@
 package controller;
 
+import javax.swing.*;
 import java.sql.*;
 
 public class LoginController {
@@ -22,8 +23,11 @@ public class LoginController {
             rs = pr.executeQuery();
 
             check = rs.next();
+
+            rs.close();
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, e, "Error", JOptionPane.ERROR_MESSAGE);
         }
         return check;
     }

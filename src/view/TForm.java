@@ -3,7 +3,8 @@ package view;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import java.sql.*;
+
+import controller.TempResidence_AbsenceController;
 
 public class TForm extends JFrame implements ActionListener {
     private JLabel lbTName = new JLabel("Name");
@@ -32,60 +33,65 @@ public class TForm extends JFrame implements ActionListener {
     private JPanel pnMain = new JPanel();
 
     private TempResidence_Absence ta;
-    private Statement sm;
     private Object tid;
+
+    private TempResidence_AbsenceController tc = new TempResidence_AbsenceController();
 
     public TForm(String title, TempResidence_Absence ta, Object tid, Object tname, Object tiden, Object tdate, Object ttemp, Object tabsence, Object treason) {
         super(title);
+        try {
+            this.ta = ta;
+            this.tid = tid;
 
-        this.ta = ta;
-        this.tid = tid;
+            pnMain.setLayout(new GridLayout(7, 2, 5, 5));
+            pnMain.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 
-        pnMain.setLayout(new GridLayout(7, 2, 5, 5));
-        pnMain.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+            tfTName = new JTextField(String.valueOf(tname));
+            tfTIdentity = new JTextField(String.valueOf(tiden));
+            tfTDate = new JTextField(String.valueOf(tdate));
+            tfTempResidenceLocation = new JTextField(String.valueOf(ttemp));
+            tfAbsenceLocation = new JTextField(String.valueOf(tabsence));
+            tfTReason = new JTextField(String.valueOf(treason));
 
-        tfTName = new JTextField(String.valueOf(tname));
-        tfTIdentity = new JTextField(String.valueOf(tiden));
-        tfTDate = new JTextField(String.valueOf(tdate));
-        tfTempResidenceLocation = new JTextField(String.valueOf(ttemp));
-        tfAbsenceLocation = new JTextField(String.valueOf(tabsence));
-        tfTReason = new JTextField(String.valueOf(treason));
+            pnMain.add(lbTName);
+            pnMain.add(tfTName);
 
-        pnMain.add(lbTName);
-        pnMain.add(tfTName);
+            pnMain.add(lbTIdentity);
+            pnMain.add(tfTIdentity);
 
-        pnMain.add(lbTIdentity);
-        pnMain.add(tfTIdentity);
+            pnMain.add(lbTDate);
+            pnMain.add(tfTDate);
 
-        pnMain.add(lbTDate);
-        pnMain.add(tfTDate);
+            pnMain.add(lbTempResidenceLocation);
+            pnMain.add(tfTempResidenceLocation);
 
-        pnMain.add(lbTempResidenceLocation);
-        pnMain.add(tfTempResidenceLocation);
+            pnMain.add(lbAbsenceLocation);
+            pnMain.add(tfAbsenceLocation);
 
-        pnMain.add(lbAbsenceLocation);
-        pnMain.add(tfAbsenceLocation);
+            pnMain.add(lbTReason);
+            pnMain.add(tfTReason);
 
-        pnMain.add(lbTReason);
-        pnMain.add(tfTReason);
+            lbError.setVisible(false);
+            pnMain.add(lbError);
 
-        lbError.setVisible(false);
-        pnMain.add(lbError);
+            btSave.setPreferredSize(new Dimension(100, 25));
+            btSave.addActionListener(this);
 
-        btSave.setPreferredSize(new Dimension(100, 25));
-        btSave.addActionListener(this);
+            pnControl.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
+            pnControl.add(btSave);
 
-        pnControl.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
-        pnControl.add(btSave);
+            pnMain.add(pnControl);
 
-        pnMain.add(pnControl);
-
-        this.setContentPane(pnMain);
-        this.setSize(640, 360);
-        this.setResizable(false);
-        this.setLocationRelativeTo(null);
-        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        this.setVisible(true);
+            this.setContentPane(pnMain);
+            this.setSize(640, 360);
+            this.setResizable(false);
+            this.setLocationRelativeTo(null);
+            this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            this.setVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, e, "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     @Override
@@ -98,31 +104,18 @@ public class TForm extends JFrame implements ActionListener {
     public void updateDB() {
 
         try {
-            String sql;
-            if (this.getTitle().equals("Add Form")) {
-                sql = "INSERT INTO TempResidence_Absence VALUES (N\'"
-                        + tfTName.getText() + "\', "
-                        + tfTIdentity.getText() + ", N\'"
-                        + tfTDate.getText() + "\', N\'"
-                        + tfTempResidenceLocation.getText() + "\', N\'"
-                        + tfAbsenceLocation.getText() + "\', N\'"
-                        + tfTReason.getText() + "\')";
-
-            } else {
-                sql = "UPDATE TempResidence_Absence SET"
-                        + " TName = N\'" + tfTName.getText()
-                        + "\', TIdentity = " + tfTIdentity.getText()
-                        + ", TDate = N\'" + tfTDate.getText()
-                        + "\', TempResidenceLocation = N\'" + tfTempResidenceLocation.getText()
-                        + "\', AbsenceLocation = N\'" + tfAbsenceLocation.getText()
-                        + "\', TReason = N\'" + tfTReason.getText()
-                        + "\' WHERE TID = " + String.valueOf(tid);
-            }
-            System.out.println(sql);
-            ta.sm.executeUpdate(sql);
+            tc.editTempResidence_Absence(this.getTitle().equals("Add Form") ? "Add Form" : "Edit Form",
+                    String.valueOf(tid),
+                    tfTName.getText(),
+                    tfTIdentity.getText(),
+                    tfTDate.getText(),
+                    tfTempResidenceLocation.getText(),
+                    tfAbsenceLocation.getText(),
+                    tfTReason.getText()
+            );
 
             ta.load();
-            ta.model.fireTableDataChanged();
+            ta.modelT.fireTableDataChanged();
 
             this.dispose();
 

@@ -6,8 +6,8 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
 
-import controller.*;
-import model.*;
+import controller.PeopleController;
+import model.people;
 
 public class People implements ActionListener, MouseListener {
     //private Icon iconSearch = new ImageIcon("./assets/search.png");
@@ -19,7 +19,7 @@ public class People implements ActionListener, MouseListener {
     private JButton btEditP = new JButton("Edit people");
     private JButton btDeleteP = new JButton("Delete people");
 
-    DefaultTableModel model = new DefaultTableModel(new String[]{"PID", "PName", "PIdentity", "Householder Identity", "PRelationship with Householder", "PGender", "PBirthday", "PHometown", "PJob", "PEdu", "PReligion"}, 0) {
+    DefaultTableModel modelP = new DefaultTableModel(new String[]{"PID", "PName", "PIdentity", "Householder Identity", "PRelationship with Householder", "PGender", "PBirthday", "PHometown", "PJob", "PEdu", "PReligion"}, 0) {
         @Override
         public boolean isCellEditable(int row, int column) {
             return false;
@@ -32,15 +32,14 @@ public class People implements ActionListener, MouseListener {
 
     private PeopleController pc = new PeopleController();
 
-    int selectedRow = 0;
+    private int selectedRow = 0;
 
     public People() {
         try {
-
             load();
 
-            sorter = new TableRowSorter<>(model);
-            table = new JTable(model);
+            sorter = new TableRowSorter<>(modelP);
+            table = new JTable(modelP);
             table.setRowSorter(sorter);
 
             table.addMouseListener(this);
@@ -74,38 +73,46 @@ public class People implements ActionListener, MouseListener {
                 }
             });
 
-            pnControl.add(lbSearchP, BorderLayout.NORTH);
-            pnControl.add(tfSearchP, BorderLayout.NORTH);
-            pnControl.add(btAddP, BorderLayout.NORTH);
-            pnControl.add(btEditP, BorderLayout.NORTH);
-            pnControl.add(btDeleteP, BorderLayout.NORTH);
+            pnControl.add(lbSearchP);
+            pnControl.add(tfSearchP);
+            pnControl.add(btAddP);
+            pnControl.add(btEditP);
+            pnControl.add(btDeleteP);
 
             pnP.setLayout(new BorderLayout());
+            pnP.setBorder(BorderFactory.createEmptyBorder(5, 20, 20, 20));
+
             pnP.add(pnControl, BorderLayout.NORTH);
             pnP.add(new JScrollPane(table), BorderLayout.CENTER);
 
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, e, "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     public void load() {
-        model.setRowCount(0); //Clear table
+        try {
+            modelP.setRowCount(0); //Clear table
 
-        for (people person : pc.getPeople()) {
-            model.addRow(new Object[]{
-                    person.getPid(),
-                    person.getPname(),
-                    person.getPiden(),
-                    person.getHiden(),
-                    person.getPrela(),
-                    person.getPgen(),
-                    person.getPbirth(),
-                    person.getPhometown(),
-                    person.getPjob(),
-                    person.getPedu(),
-                    person.getPreli()
-            });
+            for (people person : pc.getPeople()) {
+                modelP.addRow(new Object[]{
+                        person.getPid(),
+                        person.getPname(),
+                        person.getPiden(),
+                        person.getHiden(),
+                        person.getPrela(),
+                        person.getPgen(),
+                        person.getPbirth(),
+                        person.getPhometown(),
+                        person.getPjob(),
+                        person.getPedu(),
+                        person.getPreli()
+                });
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, e, "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -114,24 +121,34 @@ public class People implements ActionListener, MouseListener {
     }
 
     public void edit() {
-        new PForm("Edit Form", this,
-                table.getValueAt(selectedRow, 0),
-                table.getValueAt(selectedRow, 1),
-                table.getValueAt(selectedRow, 2),
-                table.getValueAt(selectedRow, 3),
-                table.getValueAt(selectedRow, 4),
-                table.getValueAt(selectedRow, 5),
-                table.getValueAt(selectedRow, 6),
-                table.getValueAt(selectedRow, 7),
-                table.getValueAt(selectedRow, 8),
-                table.getValueAt(selectedRow, 9),
-                table.getValueAt(selectedRow, 10));
+        try {
+            new PForm("Edit Form", this,
+                    table.getValueAt(selectedRow, 0),
+                    table.getValueAt(selectedRow, 1),
+                    table.getValueAt(selectedRow, 2),
+                    table.getValueAt(selectedRow, 3),
+                    table.getValueAt(selectedRow, 4),
+                    table.getValueAt(selectedRow, 5),
+                    table.getValueAt(selectedRow, 6),
+                    table.getValueAt(selectedRow, 7),
+                    table.getValueAt(selectedRow, 8),
+                    table.getValueAt(selectedRow, 9),
+                    table.getValueAt(selectedRow, 10));
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, e, "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     public void delete() {
-        Object id = table.getValueAt(selectedRow, 0);
-        pc.deletePeople(id);
-        model.removeRow(selectedRow);
+        try {
+            Object id = table.getValueAt(selectedRow, 0);
+            pc.deletePeople(id);
+            modelP.removeRow(selectedRow);
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, e, "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     public JPanel getPeoplePanel() {

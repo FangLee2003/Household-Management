@@ -3,7 +3,8 @@ package view;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import java.sql.*;
+
+import controller.HouseholdController;
 
 public class HForm extends JFrame implements ActionListener {
     private JLabel lbHName = new JLabel("Name");
@@ -22,48 +23,54 @@ public class HForm extends JFrame implements ActionListener {
     private JPanel pnMain = new JPanel();
 
     private Household hh;
-    private Statement sm;
     private Object hid;
+
+    private HouseholdController hc = new HouseholdController();
 
     public HForm(String title, Household hh, Object hid, Object hname, Object hiden, Object hadd) {
         super(title);
 
-        this.hh = hh;
-        this.hid = hid;
+        try {
+            this.hh = hh;
+            this.hid = hid;
 
-        pnMain.setLayout(new GridLayout(4, 2, 5, 5));
-        pnMain.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+            pnMain.setLayout(new GridLayout(4, 2, 5, 5));
+            pnMain.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 
-        tfHName = new JTextField(String.valueOf(hname));
-        tfHIdentity = new JTextField(String.valueOf(hiden));
-        tfHAddress = new JTextField(String.valueOf(hadd));
+            tfHName = new JTextField(String.valueOf(hname));
+            tfHIdentity = new JTextField(String.valueOf(hiden));
+            tfHAddress = new JTextField(String.valueOf(hadd));
 
-        pnMain.add(lbHName);
-        pnMain.add(tfHName);
+            pnMain.add(lbHName);
+            pnMain.add(tfHName);
 
-        pnMain.add(lbHIdentity);
-        pnMain.add(tfHIdentity);
+            pnMain.add(lbHIdentity);
+            pnMain.add(tfHIdentity);
 
-        pnMain.add(lbHAddress);
-        pnMain.add(tfHAddress);
+            pnMain.add(lbHAddress);
+            pnMain.add(tfHAddress);
 
-        lbError.setVisible(false);
-        pnMain.add(lbError);
+            lbError.setVisible(false);
+            pnMain.add(lbError);
 
-        btSave.setPreferredSize(new Dimension(90, 30));
-        btSave.addActionListener(this);
+            btSave.setPreferredSize(new Dimension(90, 30));
+            btSave.addActionListener(this);
 
-        pnControl.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
-        pnControl.add(btSave);
+            pnControl.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
+            pnControl.add(btSave);
 
-        pnMain.add(pnControl);
+            pnMain.add(pnControl);
 
-        this.setContentPane(pnMain);
-        this.setSize(500, 250);
-        this.setResizable(false);
-        this.setLocationRelativeTo(null);
-        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        this.setVisible(true);
+            this.setContentPane(pnMain);
+            this.setSize(500, 250);
+            this.setResizable(false);
+            this.setLocationRelativeTo(null);
+            this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            this.setVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, e, "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     @Override
@@ -74,26 +81,16 @@ public class HForm extends JFrame implements ActionListener {
     }
 
     public void updateDB() {
-
         try {
-            String sql;
-            if (this.getTitle().equals("Add Form")) {
-                sql = "INSERT INTO Household VALUES (N\'"
-                        + tfHName.getText() + "\', "
-                        + tfHIdentity.getText() + ", N\'"
-                        + tfHAddress.getText() + "\')";
-            } else {
-                sql = "UPDATE Household SET"
-                        + " HouseholderName = N\'" + tfHName.getText()
-                        + "\', HouseholderIdentity = " + tfHIdentity.getText()
-                        + ", HouseholdAddress = N\'" + tfHAddress.getText()
-                        +"\' WHERE HouseholdID = "+ String.valueOf(hid);
-            }
-            System.out.println(sql);
-            hh.sm.executeUpdate(sql);
+            hc.editHousehold(this.getTitle().equals("Add Form") ? "Add Form" : "Edit Form",
+                    String.valueOf(hid),
+                    tfHName.getText(),
+                    tfHIdentity.getText(),
+                    tfHAddress.getText()
+            );
 
             hh.load();
-            hh.model.fireTableDataChanged();
+            hh.modelH.fireTableDataChanged();
 
             this.dispose();
 

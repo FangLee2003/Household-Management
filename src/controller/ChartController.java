@@ -1,5 +1,6 @@
 package controller;
 
+import javax.swing.*;
 import java.sql.*;
 
 public class ChartController {
@@ -28,11 +29,15 @@ public class ChartController {
                 household_num = rsP.getInt(1);
             }
 
+            rsH.close();
+            rsP.close();
+
             household_percent = household_num * 100 / people_num;
             dependent_percent = 100 - household_percent;
         }
         catch(Exception e){
-            System.out.println(e);
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, e, "Error" ,JOptionPane.ERROR_MESSAGE);
         }
     }
     public double getHouseholdPercent() {

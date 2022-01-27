@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-import controller.*;
+import controller.PeopleController;
 
 public class PForm extends JFrame implements ActionListener {
     private JLabel lbPName = new JLabel("Name");
@@ -50,71 +50,75 @@ public class PForm extends JFrame implements ActionListener {
 
     public PForm(String title, People pp, Object pid, Object pname, Object piden, Object hiden, Object prela, Object pgen, Object pbirth, Object phometown, Object pjob, Object pedu, Object preli) {
         super(title);
+        try {
+            this.pp = pp;
+            this.pid = pid;
 
-        this.pp = pp;
-        this.pid = pid;
+            tfPName = new JTextField(String.valueOf(pname));
+            tfPIdentity = new JTextField(String.valueOf(piden));
+            tfHouseholderIdentity = new JTextField(String.valueOf(hiden));
+            tfPRelationshipwithHouseholder = new JTextField(String.valueOf(prela));
+            tfPGender = new JTextField(String.valueOf(pgen));
+            tfPBirthday = new JTextField(String.valueOf(pbirth));
+            tfPHometown = new JTextField(String.valueOf(phometown));
+            tfPJob = new JTextField(String.valueOf(pjob));
+            tfPEdu = new JTextField(String.valueOf(pedu));
+            tfPReligion = new JTextField(String.valueOf(preli));
 
-        tfPName = new JTextField(String.valueOf(pname));
-        tfPIdentity = new JTextField(String.valueOf(piden));
-        tfHouseholderIdentity = new JTextField(String.valueOf(hiden));
-        tfPRelationshipwithHouseholder = new JTextField(String.valueOf(prela));
-        tfPGender = new JTextField(String.valueOf(pgen));
-        tfPBirthday = new JTextField(String.valueOf(pbirth));
-        tfPHometown = new JTextField(String.valueOf(phometown));
-        tfPJob = new JTextField(String.valueOf(pjob));
-        tfPEdu = new JTextField(String.valueOf(pedu));
-        tfPReligion = new JTextField(String.valueOf(preli));
+            pnMain.setLayout(new GridLayout(11, 2, 5, 5));
+            pnMain.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 
-        pnMain.setLayout(new GridLayout(11, 2, 5, 5));
-        pnMain.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+            pnMain.add(lbPName);
+            pnMain.add(tfPName);
 
-        pnMain.add(lbPName);
-        pnMain.add(tfPName);
+            pnMain.add(lbPIdentity);
+            pnMain.add(tfPIdentity);
 
-        pnMain.add(lbPIdentity);
-        pnMain.add(tfPIdentity);
+            pnMain.add(lbHouseholderIdentity);
+            pnMain.add(tfHouseholderIdentity);
 
-        pnMain.add(lbHouseholderIdentity);
-        pnMain.add(tfHouseholderIdentity);
+            pnMain.add(lbPRelationshipwithHouseholder);
+            pnMain.add(tfPRelationshipwithHouseholder);
 
-        pnMain.add(lbPRelationshipwithHouseholder);
-        pnMain.add(tfPRelationshipwithHouseholder);
+            pnMain.add(lbPGender);
+            pnMain.add(tfPGender);
 
-        pnMain.add(lbPGender);
-        pnMain.add(tfPGender);
+            pnMain.add(lbPBirthday);
+            pnMain.add(tfPBirthday);
 
-        pnMain.add(lbPBirthday);
-        pnMain.add(tfPBirthday);
+            pnMain.add(lbPHometown);
+            pnMain.add(tfPHometown);
 
-        pnMain.add(lbPHometown);
-        pnMain.add(tfPHometown);
+            pnMain.add(lbPJob);
+            pnMain.add(tfPJob);
 
-        pnMain.add(lbPJob);
-        pnMain.add(tfPJob);
+            pnMain.add(lbPEdu);
+            pnMain.add(tfPEdu);
 
-        pnMain.add(lbPEdu);
-        pnMain.add(tfPEdu);
+            pnMain.add(lbPReligion);
+            pnMain.add(tfPReligion);
 
-        pnMain.add(lbPReligion);
-        pnMain.add(tfPReligion);
+            lbError.setVisible(false);
+            pnMain.add(lbError);
 
-        lbError.setVisible(false);
-        pnMain.add(lbError);
+            btSave.setPreferredSize(new Dimension(120, 30));
+            btSave.addActionListener(this);
 
-        btSave.setPreferredSize(new Dimension(120, 30));
-        btSave.addActionListener(this);
+            pnControl.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
+            pnControl.add(btSave);
 
-        pnControl.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
-        pnControl.add(btSave);
+            pnMain.add(pnControl);
 
-        pnMain.add(pnControl);
-
-        this.setContentPane(pnMain);
-        this.setSize(900, 600);
-        this.setResizable(false);
-        this.setLocationRelativeTo(null);
-        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        this.setVisible(true);
+            this.setContentPane(pnMain);
+            this.setSize(900, 600);
+            this.setResizable(false);
+            this.setLocationRelativeTo(null);
+            this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            this.setVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, e, "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     @Override
@@ -141,7 +145,7 @@ public class PForm extends JFrame implements ActionListener {
             );
 
             pp.load();
-            pp.model.fireTableDataChanged();
+            pp.modelP.fireTableDataChanged();
 
             this.dispose();
 

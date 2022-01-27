@@ -18,6 +18,7 @@ public class Main {
             new Login();
         } catch (Exception e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(null, e, "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

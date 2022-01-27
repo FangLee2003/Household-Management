@@ -5,9 +5,9 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
-import java.sql.*;
 
-import controller.*;
+import controller.HouseholdController;
+import model.household;
 
 public class Household implements ActionListener, MouseListener {
     private JLabel lbSearchH = new JLabel("Search household: ");
@@ -16,7 +16,7 @@ public class Household implements ActionListener, MouseListener {
     private JButton btEditH = new JButton("Edit household");
     private JButton btDeleteH = new JButton("Delete household");
 
-    DefaultTableModel model = new DefaultTableModel(new String[]{"HouseholdID", "HouseholderName", "HouseholderIdentity", "HouseholdAddress"}, 0) {
+    DefaultTableModel modelH = new DefaultTableModel(new String[]{"HouseholdID", "HouseholderName", "HouseholderIdentity", "HouseholdAddress"}, 0) {
         @Override
         public boolean isCellEditable(int row, int column) {
             return false;
@@ -27,20 +27,16 @@ public class Household implements ActionListener, MouseListener {
     private JPanel pnControl = new JPanel();
     private JPanel pnH = new JPanel();
 
-    Connection con;
-    Statement sm;
+    private HouseholdController hc = new HouseholdController();
 
-    int selectedRow = 0;
+    private int selectedRow = 0;
 
     public Household() {
         try {
-            con = ConnectionSQL.getConnection();
-            sm = con.createStatement();
-
             load();
 
-            sorter = new TableRowSorter<>(model);
-            table = new JTable(model);
+            sorter = new TableRowSorter<>(modelH);
+            table = new JTable(modelH);
             table.setRowSorter(sorter);
 
             table.addMouseListener(this);
@@ -74,37 +70,38 @@ public class Household implements ActionListener, MouseListener {
                 }
             });
 
-            pnControl.add(lbSearchH, BorderLayout.NORTH);
-            pnControl.add(tfSearchH, BorderLayout.NORTH);
-            pnControl.add(btAddH, BorderLayout.NORTH);
-            pnControl.add(btEditH, BorderLayout.NORTH);
-            pnControl.add(btDeleteH, BorderLayout.NORTH);
+            pnControl.add(lbSearchH);
+            pnControl.add(tfSearchH);
+            pnControl.add(btAddH);
+            pnControl.add(btEditH);
+            pnControl.add(btDeleteH);
 
             pnH.setLayout(new BorderLayout());
+            pnH.setBorder(BorderFactory.createEmptyBorder(5, 20, 20, 20));
+
             pnH.add(pnControl, BorderLayout.NORTH);
             pnH.add(new JScrollPane(table), BorderLayout.CENTER);
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, e, "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     public void load() {
         try {
-            model.setRowCount(0); //Clear table
+            modelH.setRowCount(0); //Clear table
 
-            ResultSet rs = sm.executeQuery("SELECT * FROM Household");
-            ResultSetMetaData rsmd = rs.getMetaData();
-            int num_column = rsmd.getColumnCount();
-            while (rs.next()) {
-                Object[] row = new Object[num_column];
-                for (int i = 0; i < num_column; i++) {
-                    row[i] = rs.getObject(i + 1);
-                }
-                model.addRow(row);
+            for (household house : hc.getHousehold()) {
+                modelH.addRow(new Object[]{
+                        house.getHid(),
+                        house.getHname(),
+                        house.getHiden(),
+                        house.getHadd()
+                });
             }
-            rs.close();
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, e, "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -113,21 +110,26 @@ public class Household implements ActionListener, MouseListener {
     }
 
     public void edit() {
-        new HForm("Edit Form", this,
-                table.getValueAt(selectedRow, 0),
-                table.getValueAt(selectedRow, 1),
-                table.getValueAt(selectedRow, 2),
-                table.getValueAt(selectedRow, 3));
+        try {
+            new HForm("Edit Form", this,
+                    table.getValueAt(selectedRow, 0),
+                    table.getValueAt(selectedRow, 1),
+                    table.getValueAt(selectedRow, 2),
+                    table.getValueAt(selectedRow, 3));
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, e, "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     public void delete() {
         try {
             Object id = table.getValueAt(selectedRow, 0);
-            model.removeRow(selectedRow);
-            String sql = "DELETE FROM Household WHERE HouseholdID = " + id;
-            sm.executeUpdate(sql);
+            hc.deleteHousehold(id);
+            modelH.removeRow(selectedRow);
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, e, "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 

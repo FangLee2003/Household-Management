@@ -5,9 +5,9 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
-import java.sql.*;
 
-import controller.*;
+import controller.TempResidence_AbsenceController;
+import model.temp_residence_absence;
 
 public class TempResidence_Absence implements ActionListener, MouseListener {
     private JLabel lbSearchT = new JLabel("Search TempResidence_Absence: ");
@@ -16,7 +16,7 @@ public class TempResidence_Absence implements ActionListener, MouseListener {
     private JButton btEditT = new JButton("Edit TempResidence_Absence");
     private JButton btDeleteT = new JButton("Delete TempResidence_Absence");
 
-    DefaultTableModel model = new DefaultTableModel(new String[]{"TID", "TName", "TIdentity", "TDate", "TempResidenceLocation", "AbsenceLocation", "TReason"}, 0) {
+    DefaultTableModel modelT = new DefaultTableModel(new String[]{"TID", "TName", "TIdentity", "TDate", "TempResidenceLocation", "AbsenceLocation", "TReason"}, 0) {
         @Override
         public boolean isCellEditable(int row, int column) {
             return false;
@@ -27,20 +27,16 @@ public class TempResidence_Absence implements ActionListener, MouseListener {
     private JPanel pnControl = new JPanel();
     private JPanel pnT = new JPanel();
 
-    Connection con;
-    Statement sm;
+    private TempResidence_AbsenceController tc = new TempResidence_AbsenceController();
 
-    int selectedRow = 0;
+    private int selectedRow = 0;
 
     public TempResidence_Absence() {
         try {
-            con = ConnectionSQL.getConnection();
-            sm = con.createStatement();
-
             load();
 
-            sorter = new TableRowSorter<>(model);
-            table = new JTable(model);
+            sorter = new TableRowSorter<>(modelT);
+            table = new JTable(modelT);
             table.setRowSorter(sorter);
 
             table.addMouseListener(this);
@@ -74,37 +70,41 @@ public class TempResidence_Absence implements ActionListener, MouseListener {
                 }
             });
 
-            pnControl.add(lbSearchT, BorderLayout.NORTH);
-            pnControl.add(tfSearchT, BorderLayout.NORTH);
-            pnControl.add(btAddT, BorderLayout.NORTH);
-            pnControl.add(btEditT, BorderLayout.NORTH);
-            pnControl.add(btDeleteT, BorderLayout.NORTH);
+            pnControl.add(lbSearchT);
+            pnControl.add(tfSearchT);
+            pnControl.add(btAddT);
+            pnControl.add(btEditT);
+            pnControl.add(btDeleteT);
 
             pnT.setLayout(new BorderLayout());
+            pnT.setBorder(BorderFactory.createEmptyBorder(5, 20, 20, 20));
+
             pnT.add(pnControl, BorderLayout.NORTH);
             pnT.add(new JScrollPane(table), BorderLayout.CENTER);
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, e, "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     public void load() {
         try {
-            model.setRowCount(0); //Clear table
+            modelT.setRowCount(0); //Clear table
 
-            ResultSet rs = sm.executeQuery("SELECT * FROM TempResidence_Absence");
-            ResultSetMetaData rsmd = rs.getMetaData();
-            int num_column = rsmd.getColumnCount();
-            while (rs.next()) {
-                Object[] row = new Object[num_column];
-                for (int i = 0; i < num_column; i++) {
-                    row[i] = rs.getObject(i + 1);
-                }
-                model.addRow(row);
+            for (temp_residence_absence temp : tc.getTempResidence_Absence()) {
+                modelT.addRow(new Object[]{
+                        temp.getTid(),
+                        temp.getTname(),
+                        temp.getTiden(),
+                        temp.getTdate(),
+                        temp.getTtemp(),
+                        temp.getTabsence(),
+                        temp.getTreason()
+                });
             }
-            rs.close();
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, e, "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -113,24 +113,29 @@ public class TempResidence_Absence implements ActionListener, MouseListener {
     }
 
     public void edit() {
-        new TForm("Edit Form", this,
-                table.getValueAt(selectedRow, 0),
-                table.getValueAt(selectedRow, 1),
-                table.getValueAt(selectedRow, 2),
-                table.getValueAt(selectedRow, 3),
-                table.getValueAt(selectedRow, 4),
-                table.getValueAt(selectedRow, 5),
-                table.getValueAt(selectedRow, 6));
+        try {
+            new TForm("Edit Form", this,
+                    table.getValueAt(selectedRow, 0),
+                    table.getValueAt(selectedRow, 1),
+                    table.getValueAt(selectedRow, 2),
+                    table.getValueAt(selectedRow, 3),
+                    table.getValueAt(selectedRow, 4),
+                    table.getValueAt(selectedRow, 5),
+                    table.getValueAt(selectedRow, 6));
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, e, "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     public void delete() {
         try {
             Object id = table.getValueAt(selectedRow, 0);
-            model.removeRow(selectedRow);
-            String sql = "DELETE FROM TempResidence_Absence WHERE TID = " + id;
-            sm.executeUpdate(sql);
+            tc.getTempResidence_Absence();
+            modelT.removeRow(selectedRow);
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, e, "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 

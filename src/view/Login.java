@@ -1,11 +1,10 @@
 package view;
 
-import controller.*;
-
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import java.sql.*;
+
+import controller.LoginController;
 
 public class Login extends JFrame implements ActionListener {
     private JLabel lbUser = new JLabel("Username");
@@ -20,33 +19,35 @@ public class Login extends JFrame implements ActionListener {
 
     private JPanel pnMain = new JPanel();
 
-    private Connection con;
-    private PreparedStatement sm;
-
     public Login() {
-        setTitle("Login");
+        try {
+            setTitle("Login");
 
-        pnMain.setLayout(new GridLayout(3, 2, 5, 5));
-        pnMain.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+            pnMain.setLayout(new GridLayout(3, 2, 5, 5));
+            pnMain.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 
-        pnMain.add(lbUser);
-        pnMain.add(tfUser);
+            pnMain.add(lbUser);
+            pnMain.add(tfUser);
 
-        pnMain.add(lbPass);
-        pnMain.add(tfPass);
+            pnMain.add(lbPass);
+            pnMain.add(tfPass);
 
-        pnMain.add(lbError);
+            pnMain.add(lbError);
 
-        btLogin.addActionListener(this);
-        pnMain.add(btLogin);
+            btLogin.addActionListener(this);
+            pnMain.add(btLogin);
 
-        this.setContentPane(pnMain);
+            this.setContentPane(pnMain);
 
-        this.setSize(400, 200);
-        this.setResizable(false);
-        this.setLocationRelativeTo(null);
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.setVisible(true);
+            this.setSize(400, 200);
+            this.setResizable(false);
+            this.setLocationRelativeTo(null);
+            this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+            this.setVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, e, "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     public void actionPerformed(ActionEvent ae) {
@@ -66,7 +67,7 @@ public class Login extends JFrame implements ActionListener {
             } catch (Exception e) {
                 lbError.setText(String.valueOf(e));
                 lbError.setForeground(Color.RED);
-                System.out.println(e);
+                e.printStackTrace();
             }
         }
         if (ae.getActionCommand().equals("Sign up")) {
