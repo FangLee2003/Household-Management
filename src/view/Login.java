@@ -39,6 +39,8 @@ public class Login extends JFrame implements ActionListener {
 
             this.setContentPane(pnMain);
 
+            setIconImage(Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("./assets/logo.png")));
+
             this.setSize(400, 200);
             this.setResizable(false);
             this.setLocationRelativeTo(null);

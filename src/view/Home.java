@@ -1,13 +1,15 @@
 package view;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class Home extends JFrame {
     private People pnPeople = new People();
     private Household pnHousehold = new Household();
     private TempResidence_Absence pnTRA = new TempResidence_Absence();
     private Chart pnAnalysis = new Chart();
-    private JTabbedPane tp = new JTabbedPane();
+
+    private JTabbedPane tp = new JTabbedPane(JTabbedPane.LEFT);
 
     public Home() {
         try {
@@ -17,12 +19,14 @@ public class Home extends JFrame {
             tp.addTab("Data Analysis", null, pnAnalysis.getChart(), "Click to see analysis");
             add(tp);
 
+            setIconImage(Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("./assets/logo.png")));
+
             setTitle("People Management - Fang Lee");
-            setSize(1000, 500);
             setExtendedState(JFrame.MAXIMIZED_BOTH); // Full screen
-            setLocationRelativeTo(null);
+            setResizable(false);
             setDefaultCloseOperation(EXIT_ON_CLOSE);
             setVisible(true);
+
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, e, "Error", JOptionPane.ERROR_MESSAGE);
