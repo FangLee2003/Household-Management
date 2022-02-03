@@ -15,6 +15,8 @@ public class HouseholdController {
 
     private List<household> list = new ArrayList<household>();
 
+    private boolean check = true;
+
     public HouseholdController() {
         try {
             con = ConnectionSQL.getConnection();
@@ -49,7 +51,7 @@ public class HouseholdController {
         return list;
     }
 
-    public void editHousehold(String title, String hid, String hname, String hiden, String hadd) {
+    public void updateHousehold(String title, String hid, String hname, String hiden, String hadd) {
         try {
             if (title.equals("Add Form")) {
                 sql = "INSERT INTO Household VALUES (N\'"
@@ -60,14 +62,16 @@ public class HouseholdController {
                 sql = "UPDATE Household SET"
                         + " HouseholderName = N\'" + hname
                         + "\', HouseholderIdentity = " + hiden
-                        + ", HouseholdAddress = N\'" + hadd
-                        + "\' WHERE HouseholdID = " + hid;
+                        + ", HAddress = N\'" + hadd
+                        + "\' WHERE HID = " + hid;
             }
             System.out.println(sql);
             sm.executeUpdate(sql);
+            check = true;
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, e, "Error" ,JOptionPane.ERROR_MESSAGE);
+            check = false;
         }
     }
 
@@ -79,5 +83,8 @@ public class HouseholdController {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, e, "Error" ,JOptionPane.ERROR_MESSAGE);
         }
+    }
+    public boolean validateHousehold() {
+        return check;
     }
 }

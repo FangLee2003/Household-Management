@@ -1,6 +1,6 @@
 package model;
 
-public class temp_residence_absence {
+public class absence_tempresidence {
     private int tid;
     private String tname;
     private long tiden;
@@ -9,11 +9,11 @@ public class temp_residence_absence {
     private String tabsence;
     private String treason;
 
-    public temp_residence_absence() {
+    public absence_tempresidence() {
 
     }
 
-    public temp_residence_absence(int tid, String tname, long tiden, String tdate, String ttemp, String tabsence, String treason) {
+    public absence_tempresidence(int tid, String tname, long tiden, String tdate, String ttemp, String tabsence, String treason) {
         this.tid = tid;
         this.tname = tname;
         this.tiden = tiden;

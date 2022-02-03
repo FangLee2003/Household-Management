@@ -9,15 +9,17 @@ import javax.swing.table.*;
 import controller.PeopleController;
 import model.people;
 
+import static view.Graphic.*;
+
 public class People implements ActionListener, MouseListener {
     //private Icon iconSearch = new ImageIcon("./assets/search.png");
 
-    private JLabel lbSearchP = new JLabel("Search people: ");
+    private JLabel lbSearchP = new JLabel("Search people: ",getSearchImageIcon(), JLabel.RIGHT);
     private JTextField tfSearchP = new JTextField(20);
 
-    private JButton btAddP = new JButton("Add people");
-    private JButton btEditP = new JButton("Edit people");
-    private JButton btDeleteP = new JButton("Delete people");
+    private JButton btAddP = new JButton("Add people", getAddImageIcon());
+    private JButton btEditP = new JButton("Edit people", getEditImageIcon());
+    private JButton btDeleteP = new JButton("Delete people", getDeleteImageIcon());
 
     DefaultTableModel modelP = new DefaultTableModel(new String[]{"PID", "PName", "PIdentity", "Householder Identity", "PRelationship with Householder", "PGender", "PBirthday", "PHometown", "PJob", "PEdu", "PReligion"}, 0) {
         @Override

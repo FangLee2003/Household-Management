@@ -1,21 +1,23 @@
 package controller;
 
-import model.temp_residence_absence;
+import model.absence_tempresidence;
 
 import javax.swing.*;
 import java.sql.*;
 import java.util.*;
 
-public class TempResidence_AbsenceController {
+public class Absence_TempResidenceController {
     private Connection con;
     private Statement sm;
     private ResultSet rs;
 
     private String sql;
 
-    private List<temp_residence_absence> list = new ArrayList<temp_residence_absence>();
+    private List<absence_tempresidence> list = new ArrayList<absence_tempresidence>();
 
-    public TempResidence_AbsenceController() {
+    private boolean check = true;
+
+    public Absence_TempResidenceController() {
         try {
             con = ConnectionSQL.getConnection();
             sm = con.createStatement();
@@ -25,16 +27,16 @@ public class TempResidence_AbsenceController {
         }
     }
 
-    public List<temp_residence_absence> getTempResidence_Absence() {
+    public List<absence_tempresidence> getAbsence_TempResidence() {
         try {
             list.clear();
 
-            sql = "SELECT * FROM TempResidence_Absence";
+            sql = "SELECT * FROM Absence_TempResidence";
             System.out.println(sql);
             rs = sm.executeQuery(sql);
 
             while (rs.next()) {
-                list.add(new temp_residence_absence(
+                list.add(new absence_tempresidence(
                         rs.getInt(1),
                         rs.getString(2),
                         rs.getLong(3),
@@ -52,43 +54,48 @@ public class TempResidence_AbsenceController {
         return list;
     }
 
-    public void editTempResidence_Absence(String title, String tid, String tname, String tiden, String tdate, String ttemp, String tabsence, String treason) {
+    public void updateAbsence_TempResidence(String title, String tid, String tname, String tiden, String tdate, String tabsence, String ttemp, String treason) {
         try{
             if (title.equals("Add Form")) {
-                sql = "INSERT INTO TempResidence_Absence VALUES (N\'"
+                sql = "INSERT INTO Absence_TempResidence VALUES (N\'"
                         + tname + "\', "
                         + tiden + ", N\'"
                         + tdate + "\', N\'"
-                        + ttemp + "\', N\'"
                         + tabsence + "\', N\'"
+                        + ttemp + "\', N\'"
                         + treason + "\')";
 
             } else {
-                sql = "UPDATE TempResidence_Absence SET"
+                sql = "UPDATE Absence_TempResidence SET"
                         + " TName = N\'" + tname
                         + "\', TIdentity = " + tiden
                         + ", TDate = N\'" + tdate
-                        + "\', TempResidenceLocation = N\'" + ttemp
                         + "\', AbsenceLocation = N\'" + tabsence
+                        + "\', TempResidenceLocation = N\'" + ttemp
                         + "\', TReason = N\'" + treason
                         + "\' WHERE TID = " + String.valueOf(tid);
             }
             System.out.println(sql);
             sm.executeUpdate(sql);
+            check = true;
         }
         catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, e, "Error" ,JOptionPane.ERROR_MESSAGE);
+            check = false;
         }
     }
     public void deleteHousehold(Object id) {
         try {
-            String sql = "DELETE FROM TempResidence_Absence WHERE TID = " + id;
+            String sql = "DELETE FROM Absence_TempResidence WHERE TID = " + id;
             sm.executeUpdate(sql);
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, e, "Error" ,JOptionPane.ERROR_MESSAGE);
         }
+    }
+    public boolean validateAbsence_TempResidence() {
+        return check;
     }
 }
 

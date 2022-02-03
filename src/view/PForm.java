@@ -6,39 +6,40 @@ import javax.swing.*;
 
 import controller.PeopleController;
 
+import static view.Graphic.*;
+
 public class PForm extends JFrame implements ActionListener {
-    private JLabel lbPName = new JLabel("Name");
+    private JLabel lbPName = new JLabel("Name", getNameImageIcon(), JLabel.LEFT);
     private JTextField tfPName;
 
-    private JLabel lbPIdentity = new JLabel("Identity");
+    private JLabel lbPIdentity = new JLabel("Identity", createImageIcon("../assets/pidentity.png"), JLabel.LEFT);
     private JTextField tfPIdentity;
 
-    private JLabel lbHouseholderIdentity = new JLabel("Householder Identity");
+    private JLabel lbHouseholderIdentity = new JLabel("Householder Identity", createImageIcon("../assets/hidentity.png"), JLabel.LEFT);
     private JTextField tfHouseholderIdentity;
 
-    private JLabel lbPRelationshipwithHouseholder = new JLabel("Relationship with Householder");
+    private JLabel lbPRelationshipwithHouseholder = new JLabel("Relationship with Householder", createImageIcon("../assets/relationship.png"), JLabel.LEFT);
     private JTextField tfPRelationshipwithHouseholder;
 
-    private JLabel lbPGender = new JLabel("Gender");
+    private JLabel lbPGender = new JLabel("Gender", createImageIcon("../assets/gender.png"), JLabel.LEFT);
     private JTextField tfPGender;
 
-    private JLabel lbPBirthday = new JLabel("Birthday");
+    private JLabel lbPBirthday = new JLabel("Birthday", createImageIcon("../assets/birthday.png"), JLabel.LEFT);
     private JTextField tfPBirthday;
 
-    private JLabel lbPHometown = new JLabel("Hometown");
+    private JLabel lbPHometown = new JLabel("Hometown", createImageIcon("../assets/hometown.png"), JLabel.LEFT);
     private JTextField tfPHometown;
 
-    private JLabel lbPJob = new JLabel("Job");
+    private JLabel lbPJob = new JLabel("Job", createImageIcon("../assets/job.png"), JLabel.LEFT);
     private JTextField tfPJob;
 
-    private JLabel lbPEdu = new JLabel("Education");
+    private JLabel lbPEdu = new JLabel("Education", createImageIcon("../assets/education.png"), JLabel.LEFT);
     private JTextField tfPEdu;
 
-    private JLabel lbPReligion = new JLabel("Religion");
+    private JLabel lbPReligion = new JLabel("Religion", createImageIcon("../assets/religion.png"), JLabel.LEFT);
     private JTextField tfPReligion;
 
-    private JLabel lbError = new JLabel("");
-    private JButton btSave = new JButton("Save");
+    private JButton btSave = new JButton("Save", getSaveImageIcon());
 
     private JPanel pnControl = new JPanel();
     private JPanel pnMain = new JPanel();
@@ -98,8 +99,7 @@ public class PForm extends JFrame implements ActionListener {
             pnMain.add(lbPReligion);
             pnMain.add(tfPReligion);
 
-            lbError.setVisible(false);
-            pnMain.add(lbError);
+            pnMain.add(new JLabel(""));
 
             btSave.setPreferredSize(new Dimension(120, 30));
             btSave.addActionListener(this);
@@ -109,12 +109,14 @@ public class PForm extends JFrame implements ActionListener {
 
             pnMain.add(pnControl);
 
-            this.setContentPane(pnMain);
-            this.setSize(900, 600);
-            this.setResizable(false);
-            this.setLocationRelativeTo(null);
-            this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-            this.setVisible(true);
+            setContentPane(pnMain);
+            setIconImage(Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("./assets/" + (getTitle().equals("Add Form") ? "add" : "edit") + ".png")));
+            setSize(900, 600);
+            setResizable(false);
+            setLocationRelativeTo(null);
+            setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            setVisible(true);
+
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, e, "Error", JOptionPane.ERROR_MESSAGE);
@@ -130,7 +132,7 @@ public class PForm extends JFrame implements ActionListener {
 
     public void updateDB() {
         try {
-            pc.editPeople(this.getTitle().equals("Add Form") ? "Add Form" : "Edit Form",
+            pc.updatePeople(getTitle().equals("Add Form") ? "Add Form" : "Edit Form",
                     String.valueOf(pid),
                     tfPName.getText(),
                     tfPIdentity.getText(),
@@ -147,12 +149,13 @@ public class PForm extends JFrame implements ActionListener {
             pp.load();
             pp.modelP.fireTableDataChanged();
 
-            this.dispose();
+            if (pc.validatePeople()) {
+                dispose();
+            }
 
         } catch (Exception e) {
-            lbError.setText(String.valueOf(e));
-            lbError.setForeground(Color.RED);
-            lbError.setVisible(true);
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, e, "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

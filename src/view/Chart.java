@@ -10,6 +10,8 @@ import org.jfree.chart.plot.*;
 
 import controller.ChartController;
 
+import static view.Graphic.createImageIcon;
+
 public class Chart implements ActionListener {
     private DefaultPieDataset dataset = new DefaultPieDataset();
     private JFreeChart pieChart;
@@ -18,7 +20,8 @@ public class Chart implements ActionListener {
 
     private ChartController cc = new ChartController();
 
-    private JButton btReload = new JButton("Reload");
+    private JButton btReload = new JButton("Reload", createImageIcon("../assets/reload.png"));
+
     private JPanel pnControl = new JPanel();
     private JPanel pnMain = new JPanel();
 
@@ -33,7 +36,7 @@ public class Chart implements ActionListener {
             plot = (PiePlot3D) pieChart.getPlot();
             plot.setForegroundAlpha(0.60f);
             plot.setInteriorGap(0.02);
-            plot.setBackgroundPaint(Color.WHITE);
+            plot.setBackgroundPaint(null);
             plot.setOutlinePaint(null);
             plot.setLabelGenerator(null);
 
@@ -50,7 +53,7 @@ public class Chart implements ActionListener {
 
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "Error" ,JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, e, "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -59,12 +62,12 @@ public class Chart implements ActionListener {
             dataset.setValue("Householders", cc.getHouseholdPercent());
             dataset.setValue("Dependents", cc.getDependentPercent());
 
-            System.out.println("Householders: " + cc.getHouseholdPercent() + "%");
-            System.out.println("Dependents: " + cc.getDependentPercent() + "%");
+            System.out.println("Householders Percent: " + cc.getHouseholdPercent() + "%");
+            System.out.println("Dependents Percent: " + cc.getDependentPercent() + "%");
 
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "Error" ,JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, e, "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 

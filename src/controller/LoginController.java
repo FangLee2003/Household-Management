@@ -6,21 +6,18 @@ import java.sql.*;
 public class LoginController {
     private Connection con;
     private ResultSet rs;
-    private PreparedStatement pr;
+    private Statement sm;
     private Boolean check;
 
     public Boolean checkLogin(String user, String pass) {
         try {
             con = ConnectionSQL.getConnection();
+            sm = con.createStatement();
 
-            String sql = "SELECT * FROM Manager where MAccount = ? and MPass = ?";
-            pr = con.prepareStatement(sql);
-
-            pr.setString(1, user);
-            pr.setString(2, pass);
-
+            String sql = "SELECT * FROM Manager WHERE MAccount LIKE N\'" + user + "\' and MPass LIKE N\'" + pass + "\'";
             System.out.println(sql);
-            rs = pr.executeQuery();
+
+            rs = sm.executeQuery(sql);
 
             check = rs.next();
 

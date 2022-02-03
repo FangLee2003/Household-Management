@@ -15,16 +15,17 @@ public class PeopleController {
 
     private List<people> list = new ArrayList<people>();
 
+    private boolean check = true;
+
     public PeopleController() {
         try {
             con = ConnectionSQL.getConnection();
             sm = con.createStatement();
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "Error" ,JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, e, "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
 
     public List<people> getPeople() {
 
@@ -53,13 +54,13 @@ public class PeopleController {
             rs.close();
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "Error" ,JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, e, "Error", JOptionPane.ERROR_MESSAGE);
         }
 
         return list;
     }
 
-    public void editPeople(String title, String pid, String pname, String piden, String phiden, String prela, String pgen, String pbirth, String phometown, String pjob, String pedu, String preli) {
+    public void updatePeople(String title, String pid, String pname, String piden, String phiden, String prela, String pgen, String pbirth, String phometown, String pjob, String pedu, String preli) {
 
         try {
             if (title.equals("Add Form")) {
@@ -92,9 +93,11 @@ public class PeopleController {
             }
             System.out.println(sql);
             sm.executeUpdate(sql);
+            check = true;
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "Error" ,JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, e, "Error", JOptionPane.ERROR_MESSAGE);
+            check = false;
         }
     }
 
@@ -104,7 +107,10 @@ public class PeopleController {
             sm.executeUpdate(sql);
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "Error" ,JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, e, "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
+    public boolean validatePeople() {
+        return check;
     }
 }

@@ -14,7 +14,7 @@ public class Main {
             UIManager.setLookAndFeel("io.github.vincenzopalazzo:material-ui-swing:1.1.2");
             UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
             */
-            UIManager.setLookAndFeel("com.formdev.flatlaf.FlatLightLaf");
+            UIManager.setLookAndFeel("com.formdev.flatlaf.FlatIntelliJLaf");
             new Login();
         } catch (Exception e) {
             e.printStackTrace();

@@ -4,40 +4,40 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-import controller.TempResidence_AbsenceController;
+import controller.Absence_TempResidenceController;
+
+import static view.Graphic.*;
 
 public class TForm extends JFrame implements ActionListener {
-    private JLabel lbTName = new JLabel("Name");
+    private JLabel lbTName = new JLabel("Name", getNameImageIcon(), JLabel.LEFT);
     private JTextField tfTName;
 
-    private JLabel lbTIdentity = new JLabel("Identity");
+    private JLabel lbTIdentity = new JLabel("Identity", createImageIcon("../assets/pidentity.png"), JLabel.LEFT);
     private JTextField tfTIdentity;
 
-    private JLabel lbTDate = new JLabel("Date");
+    private JLabel lbTDate = new JLabel("Date", createImageIcon("../assets/date.png"), JLabel.LEFT);
     private JTextField tfTDate;
 
-    private JLabel lbTempResidenceLocation = new JLabel("Temp Residence Location");
-    private JTextField tfTempResidenceLocation;
-
-    private JLabel lbAbsenceLocation = new JLabel("Absence Location");
+    private JLabel lbAbsenceLocation = new JLabel("Absence Location", createImageIcon("../assets/address.png"), JLabel.LEFT);
     private JTextField tfAbsenceLocation;
 
-    private JLabel lbTReason = new JLabel("Reason");
+    private JLabel lbTempResidenceLocation = new JLabel("Temp Residence Location", createImageIcon("../assets/finish.png"), JLabel.LEFT);
+    private JTextField tfTempResidenceLocation;
+
+    private JLabel lbTReason = new JLabel("Reason", createImageIcon("../assets/reason.png"), JLabel.LEFT);
     private JTextField tfTReason;
 
-    private JLabel lbError = new JLabel("");
-
-    private JButton btSave = new JButton("Save");
+    private JButton btSave = new JButton("Save", getSaveImageIcon());
 
     private JPanel pnControl = new JPanel();
     private JPanel pnMain = new JPanel();
 
-    private TempResidence_Absence ta;
+    private Absence_TempResidence ta;
     private Object tid;
 
-    private TempResidence_AbsenceController tc = new TempResidence_AbsenceController();
+    private Absence_TempResidenceController tc = new Absence_TempResidenceController();
 
-    public TForm(String title, TempResidence_Absence ta, Object tid, Object tname, Object tiden, Object tdate, Object ttemp, Object tabsence, Object treason) {
+    public TForm(String title, Absence_TempResidence ta, Object tid, Object tname, Object tiden, Object tdate, Object tabsence, Object ttemp, Object treason) {
         super(title);
         try {
             this.ta = ta;
@@ -49,8 +49,8 @@ public class TForm extends JFrame implements ActionListener {
             tfTName = new JTextField(String.valueOf(tname));
             tfTIdentity = new JTextField(String.valueOf(tiden));
             tfTDate = new JTextField(String.valueOf(tdate));
-            tfTempResidenceLocation = new JTextField(String.valueOf(ttemp));
             tfAbsenceLocation = new JTextField(String.valueOf(tabsence));
+            tfTempResidenceLocation = new JTextField(String.valueOf(ttemp));
             tfTReason = new JTextField(String.valueOf(treason));
 
             pnMain.add(lbTName);
@@ -62,19 +62,18 @@ public class TForm extends JFrame implements ActionListener {
             pnMain.add(lbTDate);
             pnMain.add(tfTDate);
 
-            pnMain.add(lbTempResidenceLocation);
-            pnMain.add(tfTempResidenceLocation);
-
             pnMain.add(lbAbsenceLocation);
             pnMain.add(tfAbsenceLocation);
+
+            pnMain.add(lbTempResidenceLocation);
+            pnMain.add(tfTempResidenceLocation);
 
             pnMain.add(lbTReason);
             pnMain.add(tfTReason);
 
-            lbError.setVisible(false);
-            pnMain.add(lbError);
+            pnMain.add(new JLabel(""));
 
-            btSave.setPreferredSize(new Dimension(100, 25));
+            btSave.setPreferredSize(new Dimension(90, 30));
             btSave.addActionListener(this);
 
             pnControl.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
@@ -82,12 +81,13 @@ public class TForm extends JFrame implements ActionListener {
 
             pnMain.add(pnControl);
 
-            this.setContentPane(pnMain);
-            this.setSize(640, 360);
-            this.setResizable(false);
-            this.setLocationRelativeTo(null);
-            this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-            this.setVisible(true);
+            setContentPane(pnMain);
+            setIconImage(Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("./assets/" + (getTitle().equals("Add Form") ? "add" : "edit") + ".png")));
+            setSize(640, 360);
+            setResizable(false);
+            setLocationRelativeTo(null);
+            setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            setVisible(true);
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, e, "Error", JOptionPane.ERROR_MESSAGE);
@@ -104,25 +104,26 @@ public class TForm extends JFrame implements ActionListener {
     public void updateDB() {
 
         try {
-            tc.editTempResidence_Absence(this.getTitle().equals("Add Form") ? "Add Form" : "Edit Form",
+            tc.updateAbsence_TempResidence(getTitle().equals("Add Form") ? "Add Form" : "Edit Form",
                     String.valueOf(tid),
                     tfTName.getText(),
                     tfTIdentity.getText(),
                     tfTDate.getText(),
-                    tfTempResidenceLocation.getText(),
                     tfAbsenceLocation.getText(),
+                    tfTempResidenceLocation.getText(),
                     tfTReason.getText()
             );
 
             ta.load();
             ta.modelT.fireTableDataChanged();
 
-            this.dispose();
+            if (tc.validateAbsence_TempResidence()) {
+                dispose();
+            }
 
         } catch (Exception e) {
-            lbError.setText(String.valueOf(e));
-            lbError.setForeground(Color.RED);
-            lbError.setVisible(true);
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, e, "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

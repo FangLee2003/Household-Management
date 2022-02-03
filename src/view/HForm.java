@@ -6,18 +6,19 @@ import javax.swing.*;
 
 import controller.HouseholdController;
 
+import static view.Graphic.*;
+
 public class HForm extends JFrame implements ActionListener {
-    private JLabel lbHName = new JLabel("Name");
+    private JLabel lbHName = new JLabel("Name", getNameImageIcon(), JLabel.LEFT);
     private JTextField tfHName;
 
-    private JLabel lbHIdentity = new JLabel("Identity");
+    private JLabel lbHIdentity = new JLabel("Identity", createImageIcon("../assets/hidentity.png"), JLabel.LEFT);
     private JTextField tfHIdentity;
 
-    private JLabel lbHAddress = new JLabel("Household Address");
+    private JLabel lbHAddress = new JLabel("Household Address", createImageIcon("../assets/address.png"), JLabel.LEFT);
     private JTextField tfHAddress;
 
-    private JLabel lbError = new JLabel("");
-    private JButton btSave = new JButton("Save");
+    private JButton btSave = new JButton("Save", getSaveImageIcon());
 
     private JPanel pnControl = new JPanel();
     private JPanel pnMain = new JPanel();
@@ -50,8 +51,7 @@ public class HForm extends JFrame implements ActionListener {
             pnMain.add(lbHAddress);
             pnMain.add(tfHAddress);
 
-            lbError.setVisible(false);
-            pnMain.add(lbError);
+            pnMain.add(new JLabel(""));
 
             btSave.setPreferredSize(new Dimension(90, 30));
             btSave.addActionListener(this);
@@ -61,12 +61,13 @@ public class HForm extends JFrame implements ActionListener {
 
             pnMain.add(pnControl);
 
-            this.setContentPane(pnMain);
-            this.setSize(500, 250);
-            this.setResizable(false);
-            this.setLocationRelativeTo(null);
-            this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-            this.setVisible(true);
+            setContentPane(pnMain);
+            setIconImage(Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("./assets/" + (getTitle().equals("Add Form") ? "add" : "edit") + ".png")));
+            setSize(500, 250);
+            setResizable(false);
+            setLocationRelativeTo(null);
+            setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            setVisible(true);
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, e, "Error", JOptionPane.ERROR_MESSAGE);
@@ -82,7 +83,7 @@ public class HForm extends JFrame implements ActionListener {
 
     public void updateDB() {
         try {
-            hc.editHousehold(this.getTitle().equals("Add Form") ? "Add Form" : "Edit Form",
+            hc.updateHousehold(getTitle().equals("Add Form") ? "Add Form" : "Edit Form",
                     String.valueOf(hid),
                     tfHName.getText(),
                     tfHIdentity.getText(),
@@ -92,12 +93,13 @@ public class HForm extends JFrame implements ActionListener {
             hh.load();
             hh.modelH.fireTableDataChanged();
 
-            this.dispose();
+            if (hc.validateHousehold()) {
+                dispose();
+            }
 
         } catch (Exception e) {
-            lbError.setText(String.valueOf(e));
-            lbError.setForeground(Color.RED);
-            lbError.setVisible(true);
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, e, "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

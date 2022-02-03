@@ -9,12 +9,14 @@ import javax.swing.table.*;
 import controller.HouseholdController;
 import model.household;
 
+import static view.Graphic.*;
+
 public class Household implements ActionListener, MouseListener {
-    private JLabel lbSearchH = new JLabel("Search household: ");
+    private JLabel lbSearchH = new JLabel("Search household: ",getSearchImageIcon(), JLabel.RIGHT);
     private JTextField tfSearchH = new JTextField(20);
-    private JButton btAddH = new JButton("Add household");
-    private JButton btEditH = new JButton("Edit household");
-    private JButton btDeleteH = new JButton("Delete household");
+    private JButton btAddH = new JButton("Add household", getAddImageIcon());
+    private JButton btEditH = new JButton("Edit household", getEditImageIcon());
+    private JButton btDeleteH = new JButton("Delete household", getDeleteImageIcon());
 
     DefaultTableModel modelH = new DefaultTableModel(new String[]{"HouseholdID", "HouseholderName", "HouseholderIdentity", "HouseholdAddress"}, 0) {
         @Override

@@ -6,14 +6,17 @@ import javax.swing.*;
 
 import controller.LoginController;
 
+import static view.Graphic.createImageIcon;
+import static view.Graphic.getNameImageIcon;
+
 public class Login extends JFrame implements ActionListener {
-    private JLabel lbUser = new JLabel("Username");
+    private JLabel lbUser = new JLabel("Username", getNameImageIcon(), JLabel.LEFT);
     private JTextField tfUser = new JTextField();
 
-    private JLabel lbPass = new JLabel("Password");
+    private JLabel lbPass = new JLabel("Password", createImageIcon("../assets/pass.png"), JLabel.LEFT);
     private JTextField tfPass = new JPasswordField();
 
-    private JButton btLogin = new JButton("Login");
+    private JButton btLogin = new JButton("Login", createImageIcon("../assets/login.png"));
 
     private JLabel lbError = new JLabel("");
 
@@ -61,7 +64,6 @@ public class Login extends JFrame implements ActionListener {
                 LoginController lc = new LoginController();
                 if (lc.checkLogin(user, pass)) {
                     dispose();
-                    //JOptionPane.showMessageDialog(btOk, "Ban da dang nhap thanh cong");
                     new Home();
                 }
                 lbError.setForeground(Color.RED);

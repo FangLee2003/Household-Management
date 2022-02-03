@@ -20,24 +20,24 @@ CREATE TABLE People
 )
 CREATE TABLE Household
 (
-  HouseholdID BIGINT NOT NULL IDENTITY(1, 1),
+  HID BIGINT NOT NULL IDENTITY(1, 1),
   HouseholderName NTEXT NOT NULL,
   HouseholderIdentity BIGINT NOT NULL,
   CONSTRAINT PK_Household_HouseholderIdentity PRIMARY KEY (HouseholderIdentity),
   --CONSTRAINT FK_Household_People_HouseholderIdentity FOREIGN KEY (HouseholderIdentity) REFERENCES dbo.view.People(PIdentity),
-  HouseholdAddress NTEXT
+  HAddress NTEXT
 )
-CREATE TABLE TempResidence_Absence
+CREATE TABLE Absence_TempResidence
 (
-  TID BIGINT NOT NULL IDENTITY(1, 1),
-  TName NTEXT NOT NULL,
-  TIdentity BIGINT NOT NULL,
+  AID BIGINT NOT NULL IDENTITY(1, 1),
+  AName NTEXT NOT NULL,
+  AIdentity BIGINT NOT NULL,
   CONSTRAINT PK_TempResidence_TIdentity PRIMARY KEY (TIdentity),
   --CONSTRAINT FK_TempResidence_People_TIdentity FOREIGN KEY (TIdentity) REFERENCES dbo.view.People(PIdentity),
-  TDate DATE NOT NULL,
-  TempResidenceLocation NTEXT NOT NULL,
+  ADate DATE NOT NULL,
   AbsenceLocation NTEXT NOT NULL,
-  TReason NTEXT
+  TempResidenceLocation NTEXT NOT NULL,
+  AReason NTEXT
 )
 CREATE TABLE Manager
 (
@@ -96,7 +96,7 @@ VALUES
 1212121212,
 'Ha Noi')
 
-INSERT INTO dbo.TempResidence_Absence
+INSERT INTO dbo.Absence_TempResidence
 VALUES
 ('Fang Lee',
 21212121,
@@ -105,6 +105,7 @@ VALUES
 'Hue',
 'Travel'
 )
+
 INSERT INTO dbo.Manager
 VALUES
   (

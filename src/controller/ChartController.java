@@ -8,42 +8,58 @@ public class ChartController {
     Statement smP;
     Statement smH;
 
-    int people_num = 1;
-    int household_num = 1;
+    int people_num;
+    int household_num;
+
     double household_percent;
     double dependent_percent;
 
-    public ChartController(){
+    public ChartController() {
         try {
             con = ConnectionSQL.getConnection();
             smP = con.createStatement();
             smH = con.createStatement();
 
+            loadData();
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, e, "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public void loadData() {
+        try {
             ResultSet rsP = smP.executeQuery("SELECT COUNT(*) FROM People");
-
             if (rsP.next()) {
-                people_num = rsP.getInt(1);
+                people_num = rsP.getInt(1) > 0 ? rsP.getInt(1) : 1;
             }
-            ResultSet rsH = smH.executeQuery("SELECT COUNT(*) FROM Household");
-            if (rsP.next()) {
-                household_num = rsP.getInt(1);
-            }
-
-            rsH.close();
             rsP.close();
+
+            ResultSet rsH = smH.executeQuery("SELECT COUNT(*) FROM Household");
+            if (rsH.next()) {
+                household_num = rsH.getInt(1);
+            }
+            rsH.close();
+
+            System.out.println("People Number: " + people_num);
+            System.out.println("Householder Number: " + household_num);
 
             household_percent = household_num * 100 / people_num;
             dependent_percent = 100 - household_percent;
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e, "Error" ,JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, e, "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+
     public double getHouseholdPercent() {
+        loadData();
         return household_percent;
     }
+
     public double getDependentPercent() {
+        loadData();
         return dependent_percent;
     }
 }
+

@@ -4,11 +4,10 @@ import java.sql.*;
 
 public class ConnectionSQL {
     public static Connection getConnection() throws SQLException {
-        String dbURL = "jdbc:sqlserver://localhost:1433;databaseName=PeopleManager;user=sa;password=sa";
+        String dbURL = "jdbc:sqlserver://localhost:1433;databaseName=HouseholdManagement;user=sa;password=sa";
         return DriverManager.getConnection(dbURL);
     }
 }
-// e dua jdbc vao chua dạ e đưa vào rồi mà em mới cập nhật win, để e đưa lại
 /*
 if(conn!=null){
         System.out.println("Connected");

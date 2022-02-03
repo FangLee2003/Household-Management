@@ -6,17 +6,19 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
 
-import controller.TempResidence_AbsenceController;
-import model.temp_residence_absence;
+import controller.Absence_TempResidenceController;
+import model.absence_tempresidence;
 
-public class TempResidence_Absence implements ActionListener, MouseListener {
-    private JLabel lbSearchT = new JLabel("Search TempResidence_Absence: ");
+import static view.Graphic.*;
+
+public class Absence_TempResidence implements ActionListener, MouseListener {
+    private JLabel lbSearchT = new JLabel("Search TempResidence_Absence: ", getSearchImageIcon(), JLabel.RIGHT);
     private JTextField tfSearchT = new JTextField(20);
-    private JButton btAddT = new JButton("Add TempResidence_Absence");
-    private JButton btEditT = new JButton("Edit TempResidence_Absence");
-    private JButton btDeleteT = new JButton("Delete TempResidence_Absence");
+    private JButton btAddT = new JButton("Add TempResidence_Absence", getAddImageIcon());
+    private JButton btEditT = new JButton("Edit TempResidence_Absence", getEditImageIcon());
+    private JButton btDeleteT = new JButton("Delete TempResidence_Absence", getDeleteImageIcon());
 
-    DefaultTableModel modelT = new DefaultTableModel(new String[]{"TID", "TName", "TIdentity", "TDate", "TempResidenceLocation", "AbsenceLocation", "TReason"}, 0) {
+    DefaultTableModel modelT = new DefaultTableModel(new String[]{"TID", "TName", "TIdentity", "TDate", "AbsenceLocation", "TempResidenceLocation", "TReason"}, 0) {
         @Override
         public boolean isCellEditable(int row, int column) {
             return false;
@@ -27,11 +29,11 @@ public class TempResidence_Absence implements ActionListener, MouseListener {
     private JPanel pnControl = new JPanel();
     private JPanel pnT = new JPanel();
 
-    private TempResidence_AbsenceController tc = new TempResidence_AbsenceController();
+    private Absence_TempResidenceController tc = new Absence_TempResidenceController();
 
     private int selectedRow = 0;
 
-    public TempResidence_Absence() {
+    public Absence_TempResidence() {
         try {
             load();
 
@@ -91,7 +93,7 @@ public class TempResidence_Absence implements ActionListener, MouseListener {
         try {
             modelT.setRowCount(0); //Clear table
 
-            for (temp_residence_absence temp : tc.getTempResidence_Absence()) {
+            for (absence_tempresidence temp : tc.getAbsence_TempResidence()) {
                 modelT.addRow(new Object[]{
                         temp.getTid(),
                         temp.getTname(),
@@ -131,7 +133,7 @@ public class TempResidence_Absence implements ActionListener, MouseListener {
     public void delete() {
         try {
             Object id = table.getValueAt(selectedRow, 0);
-            tc.getTempResidence_Absence();
+            tc.getAbsence_TempResidence();
             modelT.removeRow(selectedRow);
         } catch (Exception e) {
             e.printStackTrace();
