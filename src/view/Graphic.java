@@ -34,7 +34,18 @@ public class Graphic {
         return createImageIcon("../assets/name.png");
     }
 
-    public static ImageIcon getSaveImageIcon(){
+    public static ImageIcon getSaveImageIcon() {
         return createImageIcon("../assets/save.png");
     }
+
+    public static ImageIcon getLoadImageIcon(String path) {
+        java.net.URL imgURL = Home.class.getResource(path);
+
+        if (imgURL != null) {
+            return new ImageIcon(imgURL);
+        }
+        System.err.println("Couldn't find file: " + path);
+        return null;
+    }
 }
+

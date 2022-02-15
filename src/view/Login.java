@@ -6,8 +6,7 @@ import javax.swing.*;
 
 import controller.LoginController;
 
-import static view.Graphic.createImageIcon;
-import static view.Graphic.getNameImageIcon;
+import static view.Graphic.*;
 
 public class Login extends JFrame implements ActionListener {
     private JLabel lbUser = new JLabel("Username", getNameImageIcon(), JLabel.LEFT);
@@ -19,36 +18,37 @@ public class Login extends JFrame implements ActionListener {
     private JButton btLogin = new JButton("Login", createImageIcon("../assets/login.png"));
 
     private JLabel lbError = new JLabel("");
+    private JLabel lbBackground = new JLabel(getLoadImageIcon("../assets/loginbackground.png"));
 
-    private JPanel pnMain = new JPanel();
+    private JPanel pnLogin = new JPanel();
 
     public Login() {
         try {
             setTitle("Login");
 
-            pnMain.setLayout(new GridLayout(3, 2, 5, 5));
-            pnMain.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+            pnLogin.setLayout(new GridLayout(3, 2, 5, 5));
+            pnLogin.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+            pnLogin.add(lbUser);
+            pnLogin.add(tfUser);
 
-            pnMain.add(lbUser);
-            pnMain.add(tfUser);
+            pnLogin.add(lbPass);
+            pnLogin.add(tfPass);
 
-            pnMain.add(lbPass);
-            pnMain.add(tfPass);
-
-            pnMain.add(lbError);
+            pnLogin.add(lbError);
 
             btLogin.addActionListener(this);
-            pnMain.add(btLogin);
+            pnLogin.add(btLogin);
 
-            this.setContentPane(pnMain);
+            add(pnLogin);
+
+            pack();
 
             setIconImage(Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("./assets/logo.png")));
-
-            this.setSize(400, 200);
-            this.setResizable(false);
-            this.setLocationRelativeTo(null);
-            this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-            this.setVisible(true);
+            setSize(400, 200);
+            setResizable(false);
+            setLocationRelativeTo(null);
+            setDefaultCloseOperation(EXIT_ON_CLOSE);
+            setVisible(true);
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, e, "Error", JOptionPane.ERROR_MESSAGE);

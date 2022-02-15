@@ -1,4 +1,4 @@
-import view.Login;
+import view.Loading;
 
 import javax.swing.*;
 
@@ -15,7 +15,7 @@ public class Main {
             UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
             */
             UIManager.setLookAndFeel("com.formdev.flatlaf.FlatIntelliJLaf");
-            new Login();
+            new Loading();
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, e, "Error", JOptionPane.ERROR_MESSAGE);
