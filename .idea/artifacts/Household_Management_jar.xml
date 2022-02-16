@@ -1,0 +1,12 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="Household-Management:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Household_Management_jar</output-path>
+    <root id="archive" name="Household-Management.jar">
+      <element id="module-output" name="Household-Management" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/theme/material-ui-swing-1.1.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/theme/flatlaf-2.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../jfreechart-1.5.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/jdbc/mssql-jdbc-9.4.1.jre16.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
