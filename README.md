@@ -1,3 +1,3 @@
 # Household Management Application
 ### Data management & analysis
-![Preview](https://user-images.githubusercontent.com/75077747/154218563-b0f516a0-754b-4e4b-89b0-82f00c0c45fd.gif)
+![Preview](https://user-images.githubusercontent.com/75077747/154324225-c140626a-c7bc-4410-a00c-3a608e9b0bba.gif)
