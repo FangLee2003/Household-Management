@@ -2,32 +2,40 @@ package controller;
 
 import javax.swing.*;
 import java.sql.*;
+import java.util.*;
+
+import model.hometown;
 
 public class ChartController {
-    Connection con;
-    Statement smP;
-    Statement smH;
+    private Connection con;
+    private Statement smP;
+    private Statement smH;
+    private Statement smB;
 
-    int people_num;
-    int household_num;
+    private int people_num;
+    private int household_num;
 
-    double household_percent;
-    double dependent_percent;
+    private double household_percent;
+    private double dependent_percent;
+
+    private List<hometown> hometowns = new ArrayList<hometown>();
 
     public ChartController() {
         try {
             con = ConnectionSQL.getConnection();
             smP = con.createStatement();
             smH = con.createStatement();
+            smB = con.createStatement();
 
-            loadData();
+            loadPieData();
+            loadBarData();
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, e, "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    public void loadData() {
+    public void loadPieData() {
         try {
             ResultSet rsP = smP.executeQuery("SELECT COUNT(*) FROM People");
             if (rsP.next()) {
@@ -52,14 +60,35 @@ public class ChartController {
         }
     }
 
+    public void loadBarData() {
+        try {
+            hometowns.clear();
+            ResultSet rsB = smB.executeQuery("SELECT CAST(PHometown AS NVARCHAR(100)) Hometown , COUNT(CAST(PHometown AS NVARCHAR(100))) AS Population FROM People GROUP BY CAST(PHometown AS NVARCHAR(100))");
+            while (rsB.next()) {
+                hometowns.add(new hometown(rsB.getString(1),
+                        rsB.getLong(2)
+                ));
+            }
+            rsB.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, e, "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     public double getHouseholdPercent() {
-        loadData();
+        loadPieData();
         return household_percent;
     }
 
     public double getDependentPercent() {
-        loadData();
+        loadPieData();
         return dependent_percent;
+    }
+    public List<hometown> getHometown() {
+        loadBarData();
+        return hometowns;
     }
 }
 
