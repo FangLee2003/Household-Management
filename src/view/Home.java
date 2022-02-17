@@ -24,12 +24,12 @@ public class Home extends JFrame {
             tp.addTab(null, iconPeople, pnPeople.getPeoplePanel(), "Click to see people");
             tp.addTab(null, iconHouse, pnHousehold.getHouseholdPanel(), "Click to see household");
             tp.addTab(null, iconMove, pnTRA.getTempResidence_AbsencePanel(), "Click to see temp residence & absence");
-            tp.addTab(null, iconData, pnAnalysis.getChart(), "Click to see analysis");
+            tp.addTab(null, iconData, pnAnalysis.getChart(), "Click to see statistics");
 
             tp.setTitleAt(0, PRE_HTML + "People" + POST_HTML);
             tp.setTitleAt(1, PRE_HTML + "Household" + POST_HTML);
             tp.setTitleAt(2, PRE_HTML + "Absence & Temp Residence" + POST_HTML);
-            tp.setTitleAt(3, PRE_HTML + "Data Analysis" + POST_HTML);
+            tp.setTitleAt(3, PRE_HTML + "Data Statistics" + POST_HTML);
 
             add(tp);
 
